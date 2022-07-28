@@ -1,0 +1,15 @@
+[Unit]
+Description=Activate VDO scratch loop device
+Requires={{ mount }}.mount
+Before=u1.mount
+After={{ mount }}.mount
+#Wants=...
+
+[Service]
+ExecStart=/sbin/losetup -f {{ destination_path }}
+ExecStop=/sbin/losetup -D
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=local-fs.target

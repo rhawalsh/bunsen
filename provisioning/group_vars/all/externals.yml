@@ -1,0 +1,38 @@
+---
+# The externals file is generally organized as a dictionary of dictionaries of
+# arbitrary depth.
+
+# The various software required for bunsen's internal functionality as well as
+# those bunsen will install on target machines during provisioning.
+_repo_prefix: "{{ is_rhel | ternary('epel', ansible_distribution | lower) }}"
+_distro_releasever: "{{ is_fedora | ternary('$releasever', target_distribution_major_number) }}"
+externals:
+  # Resources for bunsen functionality.
+  bunsen:
+    python-support:
+      schema: rpm
+      host:
+        schema: http://
+        name: coprbe.devel.redhat.com
+        path: "/results/jshimkus/python-support/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/jshimkus/python-support/pubkey.gpg
+
+  # Resources provided by the group.
+  first-party:
+    rsvpd:
+      schema: rpm
+      host:
+        schema: http://
+        name: coprbe.devel.redhat.com
+        path: "/results/awalsh/TestVDOStaging/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/awalsh/TestVDOStaging/pubkey.gpg
+
+  # Third party resources utilized.
+  third-party:
+    third-party-common:
+      schema: rpm
+      host:
+        schema: http://
+        name: coprbe.devel.redhat.com
+        path: "/results/VDO-team/StagingBunsenPackages/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/VDO-team/StagingBunsenPackages/pubkey.gpg
