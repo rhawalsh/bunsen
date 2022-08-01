@@ -12,27 +12,27 @@ externals:
     python-support:
       schema: rpm
       host:
-        schema: http://
-        name: coprbe.devel.redhat.com
-        path: "/results/jshimkus/python-support/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
-        keypath: /results/jshimkus/python-support/pubkey.gpg
+        schema: https://
+        name: download.copr.fedorainfracloud.org
+        path: "/results/@dm-vdo/BunsenSupport/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/@dm-vdo/BunsenSupport/pubkey.gpg
 
   # Resources provided by the group.
   first-party:
     rsvpd:
       schema: rpm
       host:
-        schema: http://
-        name: coprbe.devel.redhat.com
-        path: "/results/awalsh/TestVDOStaging/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
-        keypath: /results/awalsh/TestVDOStaging/pubkey.gpg
+        schema: https://
+        name: download.copr.fedorainfracloud.org
+        path: "/results/@dm-vdo/Bunsen/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/@dm-vdo/Bunsen/pubkey.gpg
 
   # Third party resources utilized.
   third-party:
     third-party-common:
       schema: rpm
       host:
-        schema: http://
-        name: coprbe.devel.redhat.com
-        path: "/results/VDO-team/StagingBunsenPackages/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
-        keypath: /results/VDO-team/StagingBunsenPackages/pubkey.gpg
+        schema: https://
+        name: download.copr.fedorainfracloud.org
+        path: "/results/@dm-vdo/BunsenThirdParty/{{_repo_prefix}}-{{_distro_releasever}}-$basearch"
+        keypath: /results/@dm-vdo/BunsenThirdParty/pubkey.gpg
