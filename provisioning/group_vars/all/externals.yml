@@ -8,7 +8,7 @@ _repo_prefix: "{{ is_rhel | ternary('epel', ansible_distribution | lower) }}"
 _distro_releasever: "{{ is_fedora | ternary('$releasever', target_distribution_major_number) }}"
 externals:
   # Resources for bunsen functionality.
-  bunsen:
+  bunsensupport:
     python-support:
       schema: rpm
       host:
