@@ -19,7 +19,7 @@ externals:
 
   # Resources provided by the group.
   first-party:
-    rsvpd:
+    bunsen:
       schema: rpm
       host:
         schema: https://
