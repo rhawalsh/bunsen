@@ -28,7 +28,7 @@ A provisioned Bunsen Environment consists of three different classes of system.
 
 - Infrastructure
     - This system provides necessary services for the other systems to utilize.
-        - Such as NFS, [RSVP](https://github.com/dm-vdo/permabit-rsvpd) (resource management and coordination), iSCSI backing storage (if applcable)
+        - Such as NFS, [RSVP](https://github.com/dm-vdo/permabit-rsvpd) (resource management and coordination), iSCSI backing storage (if applicable)
 - Resource
     - General development and compiling will be done on these systems.
     - If there are multiple incompatible targets (e.g. Fedora and RHEL), then one of each possible target should be available to ensure that the compilations are done according to their environment.
@@ -130,4 +130,5 @@ be installed to satisfy dependencies of `python3-resource-discovery`:
 * Bunsen support
   * `python3-utility-mill`
 * system supplied (if not already installed)
-  * `pyyaml` 
+  * `pyyaml`
+
