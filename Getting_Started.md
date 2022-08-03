@@ -64,6 +64,12 @@ Assuming that the dependencies above have been satisfied, you can now provision 
     ```
 
     The `admin` account should be replaced with the account that you intend to do your development with.
+
+    NOTE: In place of `ansible_ssh_pass=vagrant`, you can use `ansible_ssh_private_key_file='/path/to/vagrantdir/.vagrant/machines/<name>/libvirt/private_key'` (of course if you're not using vagrant or you have another private key granted, then you should point at that instead)
+        - `/path/to/vagrantdir` would be where you cloned [the VDO vagrant example repository](https://github.com/dm-vdo/vagrant)
+
+    NOTE: You can also leave out `ansible_ssh_pass` and `ansible_ssh_private_key_file` and insted use `--ask-pass` when running the `ansible-playbook` commands below to be prompted for the passwords instead.
+
 3. Now we can run the provisioning for the first time.  It is generally recommended to provision the roles serially to ensure that any dependencies across roles are satisfied without the chance of a timing issue being introduced.
 
     Example commands for each role.
