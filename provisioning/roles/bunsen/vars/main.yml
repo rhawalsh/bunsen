@@ -6,7 +6,7 @@ install_bunsen_support: false
 ##########################################################################
 # Repositories.
 ##########################################################################
-_bunsen: "{{ externals['bunsen'] }}"
+_bunsensupport: "{{ externals['bunsensupport'] }}"
 bunsen_support_repositories:
   - name: bunsen-python-support
     description: "bunsen python support"
@@ -15,12 +15,12 @@ bunsen_support_repositories:
     gpgcheck: no
     repo_gpgcheck: 0
     sslverify: yes
-    baseurl: "{{ [_bunsen['python-support']['host']['schema'],
-                  _bunsen['python-support']['host']['name'],
-                  _bunsen['python-support']['host']['path']] | join }}"
-    gpgkey: "{{ [_bunsen['python-support']['host']['schema'],
-                 _bunsen['python-support']['host']['name'],
-                 _bunsen['python-support']['host']['keypath']] | join }}"
+    baseurl: "{{ [_bunsensupport['python-support']['host']['schema'],
+                  _bunsensupport['python-support']['host']['name'],
+                  _bunsensupport['python-support']['host']['path']] | join }}"
+    gpgkey: "{{ [_bunsensupport['python-support']['host']['schema'],
+                 _bunsensupport['python-support']['host']['name'],
+                 _bunsensupport['python-support']['host']['keypath']] | join }}"
 
 ##########################################################################
 # Packages.
