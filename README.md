@@ -13,7 +13,11 @@ The basic environment established by `bunsen` consists of:
 # II. Getting `bunsen`
 As you're reading this README you may already have `bunsen`.  Or, perhaps, 
 someone has provided you with this README in which case `bunsen` can be 
-acquired from this location [bunsen].
+acquired from [this location](https://github.com/dm-vdo/bunsen).
+
+# III. Getting Started
+
+Visit the [Getting Started](https://github.com/dm-vdo/bunsen/Getting_Started.md) document for basic getting started instructions.
 
 # III. Setting Up A Controller System
 
