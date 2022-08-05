@@ -10,24 +10,22 @@ It is expected that you have satisfied the following criteria before getting sta
 
 # Expectations of this Guide
 
-This guide is currently intended to provide enough information to get minimally functional.  A more detailed guide will be generated later, but in the meantime this document should help you get started if you're interested in contributing to the VDO projects.
+This guide is intended to provide enough information to get you started in contributing to the VDO projects.  A more detailed guide is being generated and will be available at a later date.
 
 # Find the appropriate code repository
-
-Identify which repository you want to test.
 
 Currently the following VDO repositories are set up to allow for local testing:
 * [vdo-devel](https://github.com/dm-vdo/vdo-devel) - This is where the VDO product code resides as well as any supporting test code that is only needed for VDO itself.
 * [common](https://github.com/dm-vdo/common) - This is where the library code resides that supports both the test environment as well as VDO.
 
-* How do I tell what's the difference between the two?
+* How do I determine which repository to use?
   * The first thing to figure out is whether you're modifying the VDO code itself or the tests that directly test VDO.
-    * If that's the case, then you want to use the [vdo-devel](https://github.com/dm-vdo/vdo-devel) tree.
-  * Otherwise, you'll need to look for the code in either repository.  If you're not sure, then you should likely start on the [vdo-devel](https://github.com/dm-vdo/vdo-devel) repository and move to the [common](https://github.com/dm-vdo/common) repository if you still couldn't find what you were looking for.
+    * For editing the VDO code itself, use the [vdo-devel](https://github.com/dm-vdo/vdo-devel) tree.
+  * For editing the tests or libraries, you may need to look for the code in both repositories.  Start with the [vdo-devel](https://github.com/dm-vdo/vdo-devel) repository and then move to the [common](https://github.com/dm-vdo/common) repository.
 
 # Find the code
 
-For the purposes of this guide, all of the work you will be doing is going to take place on the Bunsen `resource` system.
+For the purposes of this guide, all work will take place on the Bunsen `resource` system.
 
 SSH to the `resource` system (typically named `ossbunsen-resource`) as the user that you have provisioned it with.
 
