@@ -51,7 +51,7 @@ For changes to the [common](https://github.com/dm-vdo/common) repository:
     ```
   * This layout is similar to vdo-devel, except there is no src directory at the top level.
     * Perl code which is used for testing and other support functions can be found under perl/
-    * Perl Test library code code can be found under perl/Permabit/
+    * Perl Test library code can be found under perl/Permabit/
       * Test definitions can be found under testcases/
     * Packaging code to generate the various RPMs needed for Bunsen can be found under packaging/
 
@@ -108,7 +108,7 @@ If you want to run specific tests, then you should find the relevant directory t
   * VDO tests - src/perl/vdotest/
   * UDS tests - src/c++/uds/src/tests
     * These tests are built and run in a kernel module via the perl test infrastructure.
-    * Test files can be identified by their _t{1..5}, _n{1..5}, p{1,2}, x1 suffixes.
+    * Test files can be identified by their letter and number suffixes following the underscore (e.g. _t1, _p1, _x1, etc.).
 * common - perl/Permabit/
 
 From these locations, you will either find a script named `vdotests.pl` or `runtests.pl` (they are symlinks that point to the same base script) which will be used to start a test.
@@ -133,7 +133,7 @@ From these locations, you will either find a script named `vdotests.pl` or `runt
 
 ## Finding the results for the perl tests
 
-By default, running the `runtests.pl` or `vdotests.pl` with no additional options will log output to stdout.  
+By default, running `runtests.pl` or `vdotests.pl` with no additional options will log output to stdout.
 
 If you want the results to go to a logfile, add the `--log` option to the command.  When running via `make jenkins` the logfiles are relocated to the base of the repository under the logfiles directory (e.g. ~/vdo-devel/logfiles or ~/common/logfiles)
 
@@ -145,7 +145,7 @@ C Unit tests can only be found on the [vdo-devel](https://github.com/dm-vdo/vdo-
 
 * VDO tests - src/c++/vdo/tests
   * These tests are built and run in userspace on the builder system.
-  * Test files can be identified by their _t{1..4}, _p1, x1 suffixes.
+  * Test files can be identified by their letter and number suffixes following the underscore (e.g. _t1, _p1, x1, etc.).
 
 ## Running the C unit tests for VDO
 
