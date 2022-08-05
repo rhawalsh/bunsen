@@ -39,8 +39,9 @@ For changes to the [vdo-devel](https://github.com/dm-vdo/vdo-devel) repository:
     git clone https://github.com/dm-vdo/vdo-devel.git && cd vdo-devel
     ```
   * The files under src from here can be generally distinguished by language-type (though `c++` isn't accurate).
-    * Core VDO code can be found under src/c++/vdo
-    * Perl test code can be found under src/perl/Permabit
+    * Core VDO code can be found under src/c++/vdo/
+    * Perl test library code can be found under src/perl/Permabit/
+    * Core perl test code can be found under src/perl/vdotest/
 
 For changes to the [common](https://github.com/dm-vdo/common) repository:
 
@@ -50,13 +51,15 @@ For changes to the [common](https://github.com/dm-vdo/common) repository:
     ```
   * This layout is similar to vdo-devel, except there is no src directory at the top level.
     * Perl code which is used for testing and other support functions can be found under perl/
+    * Perl Test library code code can be found under perl/Permabit/
+      * Test definitions can be found under testcases/
     * Packaging code to generate the various RPMs needed for Bunsen can be found under packaging/
 
 # Editing
 
 Once you've cloned your tree to the resource machine, then you can go in and start making changes.
 
-  * If you are intending to post these changes to another git repository, you will want to add the relevant repositories as a remote in the repository.
+  * If you are intending to post these changes to another git repository (e.g., your fork of the repository on GitHub), you will want to add the relevant repositories as a remote in the repository.
   ```
   git remote add <name> <url>
   ```
@@ -82,38 +85,76 @@ Assuming the repository was cloned to your homedir:
     make
     ```
 
-# Testing
+# Automated Testing
+
+## make jenkins
 
 As part of the checkin process, VDO's projects always undergo testing via Jenkins.  This testing is initiated by calling the `make jenkins` target.
 
 The `make jenkins` target is implemented in both the [common](https://github.com/dm-vdo/common) and [vdo-devel](https://github.com/dm-vdo/vdo-devel) projects.
 
-IMPORTANT: It all contributions made to these projects will run through the `make jenkins` target, so it is a good idea to run this up front to avoid any surprises.  It is generally the contributor's responsibility to ensure that all tests pass.
+IMPORTANT: All contributions made to these projects will run through the `make jenkins` target, so it is a good idea to run this before submitting a pull request to avoid any surprises.  It is generally the contributor's responsibility to ensure that all tests pass.
 
----
+## make checkin
+
+A quicker, but less complete, alternative to `make jenkins` in the repositories is the `make checkin` target which will run a less extensive suite of tests set of tests against UDS and VDO.
+
+# Testing with Perl
+
+## Running specific perl tests
 
 If you want to run specific tests, then you should find the relevant directory to start:
-* vdo-devel - src/perl/vdotest/
+* vdo-devel:
+  * VDO tests - src/perl/vdotest/
+  * UDS tests - src/c++/uds/src/tests
+    * These tests are built and run in a kernel module via the perl test infrastructure.
+    * Test files can be identified by their _t{1..5}, _n{1..5}, p{1,2}, x1 suffixes.
 * common - perl/Permabit/
 
 From these locations, you will either find a script named `vdotests.pl` or `runtests.pl` (they are symlinks that point to the same base script) which will be used to start a test.
 
-  * If you want to run tests against the vdo-devel project, such as our Basic01 test:
+  * If you want to run a specific UDS test against the vdo-devel project, such as our KernelCheckin test:
+  ```
+  cd ~/vdo-devel/src/perl/udstest
+  ./udstests.pl UDSTest::KernelCheckin
+  ```
+
+  * If you want to run a specific VDO test against the vdo-devel project, such as our Basic01 test:
   ```
   cd ~/vdo-devel/src/perl/vdotest
   ./vdotests.pl VDOTest::Basic01
   ```
 
-  * If you want to run tests against the common project, such as our Assertions_t1 test:
+  * If you want to run a specific test against the common project, such as our Assertions_t1 test:
   ```
   cd ~/common/perl/Permabit
   ./runtests.pl testcases::Assertions_t1
   ```
 
-
-# Finding the results
-
+## Finding the results for the perl tests
 
 By default, running the `runtests.pl` or `vdotests.pl` with no additional options will log output to stdout.  
 
 If you want the results to go to a logfile, add the `--log` option to the command.  When running via `make jenkins` the logfiles are relocated to the base of the repository under the logfiles directory (e.g. ~/vdo-devel/logfiles or ~/common/logfiles)
+
+# C Unit tests
+
+## Locating the C unit tests
+
+C Unit tests can only be found on the [vdo-devel](https://github.com/dm-vdo/vdo-devel) repository.
+
+* VDO tests - src/c++/vdo/tests
+  * These tests are built and run in userspace on the builder system.
+  * Test files can be identified by their _t{1..4}, _p1, x1 suffixes.
+
+## Running the C unit tests for VDO
+
+The VDO unit tests are typically run any time `make checkin` or `make jenkins` is run and it is done locally on the builder machine (in a bunsen environment, the `resource` system)
+
+* Here is an example that runs the C unit tests for VDO
+  ```
+  cd ~/vdo-devel/src/c++/vdo/tests
+  make checkin
+  ```
+
+  NOTE: We're using `make checkin` to launch the tests.  This is because the tests are typically always run all at once via a compiled program named `vdotest` in the same directory.
