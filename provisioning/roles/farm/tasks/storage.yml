@@ -66,7 +66,7 @@
       when: (scratch_vg is not defined)
               and (ansible_lvm is defined)
               and ('root' in ansible_lvm.lvs.keys())
-    when: not use_storage_server
+    when: (not use_storage_server) or (inventory_hostname not in storage_clients)
 
   # System with an external storage server specified: Use it.
   - block:
@@ -86,7 +86,7 @@
       set_fact:
         scratch_vg: "{{ ansible_default_ipv4.macaddress.split(':') | join }}"
 
-    when: use_storage_server
+    when: use_storage_server and (inventory_hostname in storage_clients)
 
   # If we ran across something unexpected, we won't get the results we want.
   - name: Verifying storage variables have been set
@@ -121,7 +121,8 @@
       src: "/dev/{{ u1_lv_full }}"
       fstype: xfs
       state: mounted
-      opts: "{%- if use_storage_server -%}
+      opts: "{%- if use_storage_server
+                    and (inventory_hostname in storage_clients) -%}
                _netdev
              {%- else -%}
                defaults
