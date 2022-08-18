@@ -127,7 +127,7 @@
     # Add ourself as a known host for every user.
     - known_host
 
-- hosts: infrastructure resources farms performance_farms
+- hosts: resources farms performance_farms
   roles:
     # Mount specified sshfs mounts.
     - sshfs_mounts

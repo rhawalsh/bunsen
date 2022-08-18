@@ -9,7 +9,7 @@
   # Add all accounts locally.
   - name: Create local user homes directory
     file:
-      dest: "{{ user_homes_local }}"
+      dest: "{{ user_homes[0].src }}"
       state: directory
     when: inventory_hostname == nfs_server
     become: yes
@@ -64,8 +64,8 @@
     - name: Add /etc/auto.bunsen-home to /etc/auto.master
       lineinfile:
         path: /etc/auto.master
-        regexp: '^{{ user_homes_local }}[ \t]+/etc/auto\.bunsen-home'
-        line: "{{ user_homes_local }} /etc/auto.bunsen-home"
+        regexp: '^{{ user_homes[0].dest }}[ \t]+/etc/auto\.bunsen-home'
+        line: "{{ user_homes[0].dest }} /etc/auto.bunsen-home"
       become: yes
 
     - name: Start autofs
