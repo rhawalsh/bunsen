@@ -59,6 +59,7 @@ _farm_packages:
   # Common to all RHEL 7 family starting with RHEL 7.5 family.
   - (CentOS|RedHat)7\.([1-9][0-9]+|[5-9]):
     - numpy
+    - kernel-abi-whitelists
 
   # Common to all RHEL families starting with RHEL 8.0 family.
   - (CentOS|RedHat)(?![1-7]\.[0-9]+)[1-9][0-9]*\.[0-9]+:
