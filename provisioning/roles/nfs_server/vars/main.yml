@@ -1,5 +1,8 @@
 # The default directors to create.
 additional_directories:
-  - "/permabit/not-backed-up/tmp"
+  - { "server": "{{ nfs_server }}",
+      "src": /permabit/not-backed-up/tmp,
+      "dest": /permabit/not-backed-up/tmp }
+
 nfs_directories: "{{ hostvars[inventory_hostname].nfs_directories
                      + additional_directories }}"

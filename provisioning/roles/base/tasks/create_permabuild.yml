@@ -82,7 +82,7 @@
 
 - name: Create the permabuild directories.
   file:
-    name: "{{ item }}"
+    name: "{{ item.dest }}"
     mode: 0755
     owner: "root"
     state: directory

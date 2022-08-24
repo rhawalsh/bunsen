@@ -5,7 +5,7 @@
 # exclude directly mounting the NFS server export of the containing directory.
 - include_tasks: "{{ playbook_dir }}/library/mount_nfs.yml"
   vars:
-    name: "{{ item }}"
-    src: "{{ nfs_server }}:{{ item }}"
+    name: "{{ item.dest }}"
+    src: "{{ item.server }}:{{ item.src }}"
   with_items: "
-    {{ hostvars[nfs_server].nfs_exports | difference([user_homes_local]) }}"
+    {{ hostvars[nfs_server].nfs_exports | difference(user_homes) }}"

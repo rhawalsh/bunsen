@@ -2,9 +2,9 @@
 - block:
   - name: Export shared directories
     nfs_exports:
-      name: "{{ item }} Share"
+      name: "{{ item.src }} Share"
       action: add
-      path: "{{ item }}"
+      path: "{{ item.src }}"
       clients: "*"
       read_only: false
       update: true

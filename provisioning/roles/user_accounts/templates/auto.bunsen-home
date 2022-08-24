@@ -6,6 +6,6 @@ case "$1" in
     .* ) exit 1 ;;
 esac
 
-echo -fstype=nfs,rw,soft,tcp {{ nfs_server }}:{{ user_homes_local }}/$1
+echo -fstype=nfs,rw,soft,tcp {{ user_homes[0].server }}:{{ user_homes[0].src }}/$1
 
 exit 0

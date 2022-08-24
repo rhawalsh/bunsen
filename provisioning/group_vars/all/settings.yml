@@ -79,6 +79,33 @@ distribution_repo_root_url: "
   {%- endif -%}
   {{ root_url }}"
 
+common_ntp_servers: []
+
+# Provide a default performance farms list to handle the case where the
+# inventory does not have such a group.
+performance_farms: "{{ groups['performance_farms'] | default([]) }}"
+
+# Server definitions.
+# Currently each of these services is tied to the infrastructure role.
+nfs_server: "{{ groups['infrastructure'][0] }}"
+permabuild_server: "{{ groups['infrastructure'][0] }}"
+rsvp_server: "{{ groups['infrastructure'][0] }}"
+
+# Common nfs mount options.  Primarily for use in an environment that has some
+# problematic behavior that should be avoided for all mounts and can be done
+# so via nfs mount optiopns; e.g., IPv6 issues.
+workaround_nfs_mount_opts: proto=tcp
+
+# The permabit build directory location and link.
+permabuild_directory: /permabit/builds/build
+permabuild_directories:
+  - { "server": "{{ nfs_server }}",
+      "src": "{{ permabuild_directory }}",
+      "dest": "{{ permabuild_directory }}" }
+
+permabuild_directories_links:
+  - { dest: /permabit/build,  src: builds/build }
+
 # User accounts to create.
 bunsen_user_account: bunsen
 
@@ -90,10 +117,13 @@ target_user_accounts: "{{ _target_user_accounts | unique | list }}"
 _user_accounts: "{{
   [bunsen_user_account, deploying_user_account] + target_user_accounts }}"
 
-# Where we place local user account's home directories.
-# We do this to avoid, in a vagrant environment, the obscuring of the vagrant
-# user that would result if we just used /home.
-user_homes_local: /home/bunsen-home
+# Source and local directory where we place local user account's home
+# directories. We do this to avoid, in a vagrant environment, the obscuring of
+# the vagrant user that would result if we just used /home.
+user_homes:
+  - { "server": "{{ nfs_server }}",
+      "src": /home/bunsen-home,
+      "dest": /home/bunsen-home }
 
 # We unique the list to cover the possibility of redundancies in account
 # specification then we remove 'root' from the list of users as if we treat it
@@ -101,7 +131,7 @@ user_homes_local: /home/bunsen-home
 user_accounts: "
   {%- set tmp = {} -%}
   {%- for user in (_user_accounts | unique | difference(['root'])) -%}
-    {%- set x = tmp.update({user: {'home' : user_homes_local + '/' + user,
+    {%- set x = tmp.update({user: {'home' : user_homes[0].dest + '/' + user,
                                    'type' : 'local'}}) -%}
   {%- endfor -%}
   {{ tmp }}"
@@ -109,33 +139,11 @@ user_accounts: "
 # Sort the list of usernames for consistent ordering while provisioning.
 user_names_local: "{{ user_accounts.keys() | sort }}"
 
-# Deploying user sshfs mounts to mount.
-deploying_user_sshfs_mounts: "{{ deploying_user_mounts | default([]) }}"
+# User nfs mounts to mount.
+extra_user_nfs_mounts: "{{ user_nfs_mounts | default({}) }}"
 
-# The permabit build directory location and link.
-permabuild_directory: /permabit/builds/build
-permabuild_directories:
-  - "{{ permabuild_directory }}"
-
-permabuild_directories_links:
-  - { dest: /permabit/build,  src: builds/build }
-
-common_ntp_servers: []
-
-# Common nfs mount options.  Primarily for use in an environment that has some
-# problematic behavior that should be avoided for all mounts and can be done
-# so via nfs mount optiopns; e.g., IPv6 issues.
-workaround_nfs_mount_opts: proto=tcp
-
-# Provide a default performance farms list to handle the case where the
-# inventory does not have such a group.
-performance_farms: "{{ groups['performance_farms'] | default([]) }}"
-
-# Server definitions.
-# Currently each of these services is tied to the infrastructure role.
-nfs_server: "{{ groups['infrastructure'][0] }}"
-permabuild_server: "{{ groups['infrastructure'][0] }}"
-rsvp_server: "{{ groups['infrastructure'][0] }}"
+# User sshfs mounts to mount.
+extra_user_sshfs_mounts: "{{ user_sshfs_mounts | default([]) }}"
 
 # Is this machine functioning as a storage server?
 # Default of empty list in determining whether this machine is a storage server

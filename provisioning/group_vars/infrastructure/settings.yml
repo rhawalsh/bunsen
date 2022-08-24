@@ -5,14 +5,8 @@ infrastructure: true
 # NFS server variables.
 ###############################################################################
 nfs_directories:
-  - /permabit/not-backed-up
+  - { "server": "{{ nfs_server }}",
+      "src": /permabit/not-backed-up,
+      "dest": /permabit/not-backed-up }
 
-nfs_exports: "{{ nfs_directories + [user_homes_local] }}"
-
-###############################################################################
-# Permabit build server variables.
-###############################################################################
-
-# The permabuild exports.
-permabuild_exports:
-  - "{{ permabuild_directories }}"
+nfs_exports: "{{ nfs_directories + user_homes }}"

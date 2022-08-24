@@ -1,0 +1,11 @@
+---
+- block:
+  # Mount the user additional nfs mounts.
+  - include_tasks: "{{ playbook_dir }}/library/mount_nfs.yml"
+    vars:
+      name: "{{ item.dest }}"
+      src: "{{ item.server }}:{{ item.src }}"
+    with_items: "{{ nfs_mounts }}"
+  vars:
+    nfs_mounts: "{{ extra_user_nfs_mounts }}"
+  when: is_farm or is_resource

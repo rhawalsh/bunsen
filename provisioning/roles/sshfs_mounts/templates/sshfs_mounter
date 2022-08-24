@@ -11,5 +11,5 @@ try_mount() {
 }
 
 {% for item in sshfs_mounts %}
-try_mount {{ item.mount }} {{ item.source }}
+try_mount {{ item.dest }} {{ item.src }}
 {% endfor %}
