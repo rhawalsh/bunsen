@@ -67,7 +67,7 @@ _farm_packages:
     - dosfstools
     - python3-numpy
     - device-mapper-devel
-    - device-mapper-eveent-devel
+    - device-mapper-event-devel
     - valgrind-devel
 
   # Common to all RHEL 7 and 8 family.
