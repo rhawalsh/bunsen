@@ -53,3 +53,16 @@
       dest: /etc/scam/albireo.conf
       mode: 0644
     become: yes
+
+  - name: SCAM data - extra user vars
+    lineinfile:
+      line: "{{ item.var | upper }}={{ item.value }}"
+      path: /etc/scam/{{ item.var | lower }}.conf
+      create: yes
+      mode: 0644
+      owner: root
+      group: root
+      state: present
+    become: yes
+    with_items: "{{ extra_user_scam_vars }}"
+

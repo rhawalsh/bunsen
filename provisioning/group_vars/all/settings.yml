@@ -153,3 +153,17 @@ is_storage_server: "\
 storage_server: "{{ groups['storage_server'][0] | default('') }}"
 use_storage_server: "{{ storage_server != '' }}"
 storage_clients: "{{ groups['storage_clients'] | default([]) }}"
+
+# Extra user scam variables.
+extra_user_scam_vars: "{{ user_scam_vars | default([]) }}"
+
+# Extra user packages.
+extra_user_packages: "{{ user_packages | default([]) }}"
+
+# Allows specification that the environment is one where checkServer may
+# require ntpd.
+allow_environmental_ntp: "{{ user_allow_environmental_ntp | default(false) }}"
+
+# Allows specification of repos to disable during installation of perl
+# modules so the modules are not installed from rpms.
+repos_disabled_for_perl_modules_install: "{{ user_repos_disabled_for_perl_modules_install | default([]) }}"
