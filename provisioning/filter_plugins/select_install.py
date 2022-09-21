@@ -87,7 +87,7 @@ def select_install(specification, selection):
 
   try:
     architecture = selection["architecture"]
-  except KeytError:
+  except KeyError:
     architecture = None
 
   try:
