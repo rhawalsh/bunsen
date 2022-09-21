@@ -5,6 +5,7 @@
     vars:
       name: "{{ item.dest }}"
       src: "{{ item.server }}:{{ item.src }}"
+      extra_opts: "{{ item.opts | default(omit) }}"
     with_items: "{{ nfs_mounts }}"
   vars:
     nfs_mounts: "{{ extra_user_nfs_mounts }}"

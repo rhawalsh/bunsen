@@ -14,10 +14,16 @@
         {%- set x = [] -%}
         {%- for pkgname in ansible_facts.packages.keys()|sort(case_sensitive=True) -%}
           {%- set pkg = ansible_facts.packages[pkgname] -%}
-          {%- if pkgname in excludes -%}
-            {# do nothing - checkServer explicitly ignores these #}
-          {%- elif pkg|length > 1 -%}
-            {%- set dummy = x.append(pkgname) -%}
+          {%- if pkgname not in excludes -%}
+            {%- set y = [] -%}
+            {% for prefix in farm_ignore_packages -%}
+              {%- if pkgname.startswith(prefix) -%}
+                {%- set dummy = y.append(prefix) -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if (y|length == 0) and (pkg|length > 1) -%}
+              {%- set dummy = x.append(pkgname) -%}
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
         {{ x }}

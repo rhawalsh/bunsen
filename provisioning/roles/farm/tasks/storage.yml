@@ -106,7 +106,7 @@
     lvol:
       vg: "{{ scratch_vg }}"
       lv: "{{ u1_lv }}"
-      size: "{{ u1_size_gb }}G"
+      size: "{{ farm_u1_size_gb }}G"
     become: yes
 
   - name: Create file system for /u1
@@ -212,7 +212,6 @@
       free_gb: "{{ ansible_lvm.vgs[scratch_vg].free_g }}"
 
   vars:
-    u1_size_gb: 48
     vdo_scratch_min_gb: 100
     # Cap test storage at around 150 GB based on test configs.
     vdo_scratch_max_gb: 150
@@ -230,7 +229,7 @@
     u1_lv: "scratch"
     u1_lv_full: "{{ scratch_vg }}/{{ u1_lv }}"
     # kB required for u1 + vdo_scratch + slop
-    required: "{{ ((u1_size_gb | int) + vdo_scratch_min_gb + 1) * 1024 * 1024 }}"
+    required: "{{ ((farm_u1_size_gb | int) + vdo_scratch_min_gb + 1) * 1024 * 1024 }}"
     # mount point directory names
     mount_points: "{{ ansible_mounts | map(attribute='mount') | list }}"
 

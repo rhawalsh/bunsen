@@ -32,6 +32,7 @@
     shell: |
       {{ ansible_pkg_mgr }} search \
                  --disablerepo '*-debuginfo' \
+                 {{ extra_repos | trim }} \
                  perl- 2>/dev/null
     args:
       warn: False
@@ -60,6 +61,17 @@
                      | list }}"
       cpanm_installed: False
 
+  vars:
+    extra_repos: |
+      {%- set x = [] -%}
+      {%- for entry in repos_disabled_for_perl_modules_install -%}
+        {%- set dummy = x.append("'" + entry + "'") -%}
+      {%- endfor -%}
+      {%- set x = (x | join(' --disablerepo ')) -%}
+      {%- if  (x | length) > 0 -%}
+        {%- set x = '--disablerepo ' + x -%}
+      {%- endif -%}
+      {{ x }}
   when: perl_rpms is not defined
 
 - name: Trivial validation of Perl RPM info

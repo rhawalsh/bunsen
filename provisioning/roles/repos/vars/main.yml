@@ -24,7 +24,7 @@ _repositories:
       sslverify: yes
 
     - name: bunsen
-      description: "rsvp packages"
+      description: "Bunsen environment packages"
       enabled: yes
       baseurl: "{{ [_bunsen['schema'],
                     _bunsen['name'],

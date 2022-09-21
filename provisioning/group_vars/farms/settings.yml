@@ -1,0 +1,8 @@
+---
+farm: true
+farm_u1_size_gb: "{{ [user_u1_size_gb | default(48), 48] | max }}"
+
+# Any package name starting with one (or more) of the strings specified
+# in user_ignore_packages is not included in the generation of the
+# required_packages file.
+farm_ignore_packages: "{{ user_ignore_packages | default([]) }}"

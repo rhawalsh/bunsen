@@ -27,3 +27,4 @@
   with_items:
     - { keyPath: ["Permabit::RSVP", "config", "processes", "ok", "user"],
         entries: ["ssh .* sftp", "sshfs"] }
+  when: is_devvm | bool

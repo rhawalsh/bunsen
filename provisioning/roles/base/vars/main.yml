@@ -182,7 +182,7 @@ _packages:
     - s390x:
     - x86_64:
 
-packages: "{{ _packages | select_install(_base_selection) }}"
+packages: "{{ _packages | select_install(_base_selection) + extra_user_packages }}"
 
 # Perl modules to install, either as RPMs or from CPAN.
 # Modules with a cpan version specified are installed before any other
