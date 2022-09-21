@@ -54,39 +54,41 @@ _repositories:
                   repo=fedora-debug-$releasever&arch=$basearch"
       failovermethod: priority
 
-  # Common to all RHEL 7 family starting with RHEL 7.5 family.
-  # There are no pre-built epel repos for s390 family.
-  - (CentOS|RedHat)7\.([1-9][0-9]+|[5-9]):
+  # Common to all RHEL families starting with RHEL 7.5 family.
+  - (CentOS|RedHat)([1-9][0-9]+\.[0-9]+|([7-9])\.([1-9][0-9]+)|7\.[5-9]|[8-9]\.[0-9]):
+    # There are no RHEL 7 pre-built epel repos for s390 family.
     - name: epel
-      description: "Extra Packages for Enterprise Linux 7 - $basearch"
-      enabled: "{{ not is_family_s390 }}"
+      description: "Extra Packages for Enterprise Linux {{ target_distribution_major_number }} - $basearch"
+      enabled: "{{ ((target_distribution_major_number | int) >= 8) or (not is_family_s390) }}"
       gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7"
+      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ target_distribution_major_number }}"
       sslverify: no
       metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-7&arch=$basearch"
+                  repo=epel-{{ target_distribution_major_number }}&arch=$basearch"
       failovermethod: priority
 
     - name: epel-debuginfo
-      description: "Extra Packages for Enterprise Linux 7 - $basearch - Debug"
+      description: "Extra Packages for Enterprise Linux {{ target_distribution_major_number }} - $basearch - Debug"
       enabled: no
       gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7"
+      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ target_distribution_major_number }}"
       sslverify: no
       metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-debug-7&arch=$basearch"
+                  repo=epel-debug-{{ target_distribution_major_number }}&arch=$basearch"
       failovermethod: priority
 
     - name: epel-source
-      description: "Extra Packages for Enterprise Linux 7 - $basearch - Source"
+      description: "Extra Packages for Enterprise Linux {{ target_distribution_major_number }} - $basearch - Source"
       enabled: no
       gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7"
+      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ target_distribution_major_number }}"
       sslverify: no
       metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-source-7&arch=$basearch"
+                  repo=epel-source-{{ target_distribution_major_number }}&arch=$basearch"
       failovermethod: priority
 
+  # Common to all RHEL 7 family starting with RHEL 7.5 family.
+  - (CentOS|RedHat)7\.([1-9][0-9]+|[5-9]):
     - name: ga
       description: "GA Repo"
       enabled: yes
@@ -115,38 +117,6 @@ _repositories:
       sslverify: no
       baseurl: "{{ distribution_repo_root_url }}/\
                   Server-optional/$basearch/debug/tree"
-
-  # Common to all RHEL 8 family only.
-  - (CentOS|RedHat)8\.([1-9][0-9]+|[0-9]):
-    - name: epel
-      description: "Extra Packages for Enterprise Linux 8 - $basearch"
-      enabled: yes
-      gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8"
-      sslverify: no
-      metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-8&arch=$basearch"
-      failovermethod: priority
-
-    - name: epel-debuginfo
-      description: "Extra Packages for Enterprise Linux 8 - $basearch - Debug"
-      enabled: no
-      gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8"
-      sslverify: no
-      metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-debug-8&arch=$basearch"
-      failovermethod: priority
-
-    - name: epel-source
-      description: "Extra Packages for Enterprise Linux 8 - $basearch - Source"
-      enabled: no
-      gpgcheck: no
-      gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8"
-      sslverify: no
-      metalink: "https://mirrors.fedoraproject.org/metalink?\
-                  repo=epel-source-8&arch=$basearch"
-      failovermethod: priority
 
   # Common to all RHEL families starting with RHEL 8.0 family.
   - (CentOS|RedHat)(?![1-7]\.[0-9]+)[1-9][0-9]*\.[0-9]+:
