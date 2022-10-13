@@ -244,7 +244,6 @@ package_specification:
     - net-tools
     - nfs-utils
     - pbit-build
-    - redhat-lsb-core
     - rsync
     - scam
     - screen
