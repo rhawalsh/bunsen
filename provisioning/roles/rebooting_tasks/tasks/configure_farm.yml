@@ -21,7 +21,7 @@
 
     - name: Edit /etc/default/grub to set crashkernel size
       shell: |
-        sed -i -e '/CMDLINE_LINUX/{/crashkernel=[0-9]/!{s/crashkernel=auto//;s/="/="crashkernel=128M /;}}' /etc/default/grub
+        sed -i -e '/CMDLINE_LINUX/{/crashkernel=[0-9]/!{s/crashkernel=auto//;s/="/="crashkernel=300M /;}}' /etc/default/grub
       args:
         warn: False
       become: yes
