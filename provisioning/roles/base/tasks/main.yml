@@ -54,3 +54,6 @@
 - include: search_path.yml
 - include: ssh.yml
   when: enable_proxy_vagrant_ssh_config | bool
+
+# Update local name resolution configurations
+- include_tasks: local_resolution_tweaks.yml

@@ -1,0 +1,12 @@
+---
+# Removes a controversial "give up" setting in nsswitch that shows up on newer
+# distros.
+#XXX: This is not getting restricted by distro, but currently only affects
+#     Fedora35 and up, but that doesn't mean it won't show up in a later
+#     release of something else.
+- name: Remove [!UNAVAIL=return] from nsswitch.conf
+  replace:
+    path: /etc/nsswitch.conf
+    regexp: '^(hosts:.*)\[!UNAVAIL=return\](.*)'
+    replace: '\1 \2'
+  become: yes
