@@ -48,12 +48,9 @@
             path: big_file
             min_size: "{{ required }}"
             max_size: "{{ (vdo_scratch_max_gb * 1024 * 1024) | int }}"
-            # test_disk is set by storage-loop.yml.
+            # test_disk and scratch_vg are set by storage-loop.yml.
             disk_var: test_disk
-
-        - name: Picking scratch volume group name
-          set_fact:
-            scratch_vg: "{{ ansible_default_ipv4.macaddress.split(':') | join }}"
+            volume_group: scratch_vg
       when: (scratch_vg is not defined) and ('/home' in mount_points)
 
     - block:
@@ -66,6 +63,21 @@
       when: (scratch_vg is not defined)
               and (ansible_lvm is defined)
               and ('root' in ansible_lvm.lvs.keys())
+
+    - block:
+        # scratch_vg not defined.
+        # Create a big file on / and use it via a loop device as a
+        # physical volume.
+        - include_tasks: storage-loop.yml
+          vars:
+            mount: /
+            path: big_file
+            min_size: "{{ required }}"
+            max_size: "{{ (vdo_scratch_max_gb * 1024 * 1024) | int }}"
+            # test_disk and scratch_vg are set by storage-loop.yml.
+            disk_var: test_disk
+            volume_group: scratch_vg
+      when: (scratch_vg is not defined)
     when: (not use_storage_server) or (inventory_hostname not in storage_clients)
 
   # System with an external storage server specified: Use it.

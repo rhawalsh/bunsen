@@ -3,9 +3,9 @@
 # Set up a big file (sparse is okay) and a loop device to act as a volume group
 # for VDO test storage.
 
-# Inputs: mount (relative to /), path (relative to mount),
-#         min_size, max_size, disk_var.
-# Sets facts, registers: {{disk_var}}, losetup_result.
+# Inputs: mount (relative to / or, as a special case, '/'),
+#         path (relative to mount), min_size, max_size, disk_var, volume_group.
+# Sets facts, registers: {{disk_var}}, {{volume_group}} and losetup_result.
 
 - name: Checking free space
   setup:
@@ -68,6 +68,12 @@
     set_fact:
       "{{ disk_var }}": "{{ losetup_result.stdout.split(':')[0] }}"
 
+  - name: Picking scratch volume group name
+    set_fact:
+      "{{ volume_group }}": "{{ ansible_default_ipv4.macaddress.split(':')
+                                | join }}"
+
   vars:
-    mount_path: "{{ ('', mount) | join('/') }}"
+    mount_path: "{{ (mount == '/')
+                  | ternary(mount, ('', mount) | join('/')) }}"
     destination_path: "{{ (mount_path, path) | join('/') }}"
