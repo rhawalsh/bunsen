@@ -26,17 +26,16 @@
     register: os_result
 
   - block:
-    # These two blocks must create the same list of accounts, in the same
-    # order, in order to ensure matching UID allocations!
     - name: Add local user accounts to infrastructure system
       user:
         name: "{{ item }}"
         home: "{{ user_accounts[item].home }}"
+        uid: "{{ user_accounts[item].uid }}"
         create_home: True
         password: "{{ user_password }}"
         group: staff
         append: yes
-      with_items: "{{ user_names_local }}"
+      with_items: "{{ user_accounts.keys() }}"
       when: inventory_hostname == nfs_server
       become: yes
 
@@ -45,11 +44,12 @@
       user:
         name: "{{ item }}"
         home: "{{ user_accounts[item].home }}"
+        uid: "{{ user_accounts[item].uid }}"
         create_home: False
         password: "{{ user_password }}"
         group: staff
         append: yes
-      with_items: "{{ user_names_local }}"
+      with_items: "{{ user_accounts.keys() }}"
       when: inventory_hostname != nfs_server
       become: yes
 
@@ -87,5 +87,5 @@
       mode: 0600
       owner: root
       group: root
-    with_items: "{{ user_names_local }}"
+    with_items: "{{ user_accounts.keys() }}"
     become: yes
