@@ -125,19 +125,27 @@ user_homes:
       "src": /home/bunsen-home,
       "dest": /home/bunsen-home }
 
+# Different distributions may have varyinng user ids already in use.  This is a
+# problem in heterogeneous environments as we require that user ids are the
+# same on all systems.  To lessen the likelihood of this problem we start local
+# user uids at a specific value far removed from the default minimum.
+local_user_start_uid: 3500
+
 # We unique the list to cover the possibility of redundancies in account
 # specification then we remove 'root' from the list of users as if we treat it
 # as we do any other account we create it messes up provisioning.
+# As we are assigning uids to local users we sort the user accounts here to
+# establish identical uids across systems.
 user_accounts: "
   {%- set tmp = {} -%}
-  {%- for user in (_user_accounts | unique | difference(['root'])) -%}
+  {%- set local_uid = namespace(value=local_user_start_uid) -%}
+  {%- for user in (_user_accounts | unique | difference(['root']) | sort) -%}
     {%- set x = tmp.update({user: {'home' : user_homes[0].dest + '/' + user,
+                                   'uid'  : local_uid.value,
                                    'type' : 'local'}}) -%}
+    {%- set local_uid.value = local_uid.value + 1 -%}
   {%- endfor -%}
   {{ tmp }}"
-
-# Sort the list of usernames for consistent ordering while provisioning.
-user_names_local: "{{ user_accounts.keys() | sort }}"
 
 # User nfs mounts to mount.
 extra_user_nfs_mounts: "{{ user_nfs_mounts | default({}) }}"
