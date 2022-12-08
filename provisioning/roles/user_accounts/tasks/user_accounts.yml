@@ -34,7 +34,6 @@
         create_home: True
         password: "{{ user_password }}"
         group: staff
-        append: yes
       with_items: "{{ user_accounts.keys() }}"
       when: inventory_hostname == nfs_server
       become: yes
@@ -48,7 +47,6 @@
         create_home: False
         password: "{{ user_password }}"
         group: staff
-        append: yes
       with_items: "{{ user_accounts.keys() }}"
       when: inventory_hostname != nfs_server
       become: yes
