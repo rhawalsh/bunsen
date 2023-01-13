@@ -4,15 +4,6 @@
 # places, and we may need to tweak this a bit to get it to work right,
 # since it involves losing our connection to the target machine etc.
 
-# Note that Ansible 2.7 has a "reboot" module, but Fedora 28 ships
-# with Ansible 2.6.5. (CSB is RHEL 7.4 with 2.4.2.0.) Perhaps once we
-# can assume 2.7 we can use that and drop this file.
-
-# Some recommended advice from the net uses "sleep 5 && reboot" with
-# "async: 1" and "poll: 0" to trigger the reboot, which worked with
-# RHEL 7.5, but doesn't seem to work with Fedora 28. We don't know why
-# yet.
-
 - block:
 
   # The sequence used in the Red Hat "rhts_reboot" script is to use
@@ -80,16 +71,9 @@
   # extra text after the JSON payload.
 
   - name: Restart system
-    command: "shutdown --no-wall -r +1"
+    reboot:
+      connect_timeout: 30
+      pre_reboot_delay: 90
+      post_reboot_delay: 90
+    retries: 2
     become: yes
-
-  # After 60 seconds, the above command will *start* the reboot
-  # sequence, which involves cleanly shutting down system services. On
-  # a simple farm configuration, it's not likely to take long, but
-  # we're gambling on that. Better would be to wait for the machine to
-  # be reachable *and* for its reported uptime to indicate that it has
-  # rebooted.
-
-  - name: Wait for system to become available
-    wait_for_connection:
-      delay: 90
