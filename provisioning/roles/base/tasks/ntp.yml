@@ -21,11 +21,9 @@
 
   vars:
     # Everybody talks to the infrastructure box, to keep in sync with each
-    # other. (If there isn't one, well, rely on there being other servers or
-    # peers configured.)
-    ntp_peers: "{%- if (infrastructure_machines | length) == 0 -%}
-                  {{ [] }}
-                {%- elif is_infrastructure -%}
+    # other. (If it turns out there isn't one rely on there being other
+    # servers or peers configured.)
+    ntp_peers: "{%- if is_infrastructure -%}
                   {{ groups['all'] }}
                 {%- else -%}
                   {{ infrastructure_machines }}
