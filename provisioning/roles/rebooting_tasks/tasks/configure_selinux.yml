@@ -2,6 +2,9 @@
 - block:
   # We need SELinux disabled for any systems where we'll use home directories
   # (in particular, SSH files) in NFS.
+  # We also need to disable SELinux in order to access the specified, if any,
+  # storage server.  We don't generally need to do that for the infrastructure
+  # machine but if it is also a storage server we do.
   - name: Disable SELinux
     selinux:
       state: disabled
@@ -11,4 +14,4 @@
   - name: Restart system to apply SELinux changes
     include_tasks: "{{ playbook_dir }}/library/restart_system.yml"
     when: selinux_result.reboot_required
-  when: not is_infrastructure
+  when: (not is_infrastructure) or is_storage_server
