@@ -23,12 +23,12 @@
     # Everybody talks to the infrastructure box, to keep in sync with each
     # other. (If there isn't one, well, rely on there being other servers or
     # peers configured.)
-    ntp_peers: "{%- if 'infrastructure' not in groups -%}
+    ntp_peers: "{%- if (infrastructure_machines | length) == 0 -%}
                   {{ [] }}
-                {%- elif inventory_hostname in groups['infrastructure'] -%}
+                {%- elif is_infrastructure -%}
                   {{ groups['all'] }}
                 {%- else -%}
-                  {{ groups['infrastructure'] }}
+                  {{ infrastructure_machines }}
                 {%- endif -%}"
     ntp_servers: "{{ common_ntp_servers }}"
 

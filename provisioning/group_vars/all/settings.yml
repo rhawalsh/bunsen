@@ -81,15 +81,43 @@ distribution_repo_root_url: "
 
 common_ntp_servers: []
 
-# Provide a default performance farms list to handle the case where the
-# inventory does not have such a group.
+# Machine type groups.
+# Farms, pfarms and performance farms.
+farms: "{{ groups['farms'] | default([]) }}"
+is_farm: "{{ inventory_hostname in farms }}"
+
 performance_farms: "{{ groups['performance_farms'] | default([]) }}"
+is_performance_farm: "{{ inventory_hostname in performance_farms }}"
+
+pfarms: "{{ groups['pfarms'] | default([]) }}"
+is_pfarm: "{{ inventory_hostname in pfarms }}"
+
+# There is only one infrastructure machine used regardless of number specified.
+# It's kept in a list for consistent structuring across all machine types.
+infrastructure_machines: "{{ (groups['infrastructure'] | default([]))[:1] }}"
+infrastructure: "{{ infrastructure_machines[0] }}"
+is_infrastructure: "{{ inventory_hostname in infrastructure_machines }}"
+
+# Resources
+resources: "{{ groups['resources'] | default([]) }}"
+is_resource: "{{ inventory_hostname in resources }}"
+
+# Storage clients
+storage_clients: "{{ groups['storage_clients'] | default([]) }}"
+is_storage_client: "{{ inventory_hostname in storage_clients }}"
+
+# There is only one storage server machine used regardless of number specified.
+# It's kept in a list for consistent structuring across all machine types.
+storage_servers: "{{ (groups['storage_server'] | default([]))[:1] }}"
+storage_server: "{{ storage_servers[0] | default('') }}"
+is_storage_server: "{{ inventory_hostname in storage_servers }}"
+use_storage_server: "{{ storage_server != '' }}"
 
 # Server definitions.
 # Currently each of these services is tied to the infrastructure role.
-nfs_server: "{{ groups['infrastructure'][0] }}"
-permabuild_server: "{{ groups['infrastructure'][0] }}"
-rsvp_server: "{{ groups['infrastructure'][0] }}"
+nfs_server: "{{ infrastructure }}"
+permabuild_server: "{{ infrastructure }}"
+rsvp_server: "{{ infrastructure }}"
 
 # Common nfs mount options.  Primarily for use in an environment that has some
 # problematic behavior that should be avoided for all mounts and can be done
@@ -152,15 +180,6 @@ extra_user_nfs_mounts: "{{ user_nfs_mounts | default({}) }}"
 
 # User sshfs mounts to mount.
 extra_user_sshfs_mounts: "{{ user_sshfs_mounts | default([]) }}"
-
-# Is this machine functioning as a storage server?
-# Default of empty list in determining whether this machine is a storage server
-# for inventories that don't have a storage_server section.
-is_storage_server: "\
-  {{ inventory_hostname in (groups['storage_server'] | default([])) }}"
-storage_server: "{{ groups['storage_server'][0] | default('') }}"
-use_storage_server: "{{ storage_server != '' }}"
-storage_clients: "{{ groups['storage_clients'] | default([]) }}"
 
 # Extra user scam variables.
 extra_user_scam_vars: "{{ user_scam_vars | default([]) }}"

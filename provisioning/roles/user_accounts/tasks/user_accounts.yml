@@ -26,7 +26,7 @@
     register: os_result
 
   - block:
-    - name: Add local user accounts to infrastructure system
+    - name: Add local user accounts to nfs server system
       user:
         name: "{{ item }}"
         home: "{{ user_accounts[item].home }}"
@@ -39,7 +39,7 @@
       become: yes
 
     # Now that the home directories exist, they can be mounted remotely.
-    - name: Add local user accounts to non-infrastructure systems
+    - name: Add local user accounts to non-nfs server systems
       user:
         name: "{{ item }}"
         home: "{{ user_accounts[item].home }}"

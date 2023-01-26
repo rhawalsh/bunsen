@@ -44,5 +44,4 @@
       mode: a+rX
       recurse: yes
     become: yes
-  when: ((inventory_hostname in (groups['farms'] | default([])))
-        or (inventory_hostname in (groups['performance_farms'] | default([]))))
+  when: is_farm or is_performance_farm
