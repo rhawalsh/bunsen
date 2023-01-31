@@ -23,8 +23,7 @@
             | ternary('LINUX-UDS', omit) }}"
       - "{{ ((is_fedora | bool) or (is_rhel8_family | bool))
             | ternary('LINUX-VDO', omit) }}"
-      - "{{ (inventory_hostname in performance_farms)
-            | ternary('VDO-PMI', omit) }}"
+      - "{{ is_performance_farm | ternary('VDO-PMI', omit) }}"
     # For convenience above, we want to support something like the "omit"
     # construct, but it doesn't work in simple list contexts; "omit" just
     # expands to some magic cookie value which we still have to explicitly

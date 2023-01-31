@@ -78,7 +78,7 @@
             disk_var: test_disk
             volume_group: scratch_vg
       when: (scratch_vg is not defined)
-    when: (not use_storage_server) or (inventory_hostname not in storage_clients)
+    when: (not use_storage_server) or (not is_storage_client)
 
   # System with an external storage server specified: Use it.
   - block:
@@ -98,7 +98,7 @@
       set_fact:
         scratch_vg: "{{ ansible_default_ipv4.macaddress.split(':') | join }}"
 
-    when: use_storage_server and (inventory_hostname in storage_clients)
+    when: use_storage_server and is_storage_client
 
   # If we ran across something unexpected, we won't get the results we want.
   - name: Verifying storage variables have been set
@@ -133,8 +133,7 @@
       src: "/dev/{{ u1_lv_full }}"
       fstype: xfs
       state: mounted
-      opts: "{%- if use_storage_server
-                    and (inventory_hostname in storage_clients) -%}
+      opts: "{%- if use_storage_server and is_storage_client -%}
                _netdev
              {%- else -%}
                defaults

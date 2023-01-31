@@ -40,15 +40,15 @@
     mounts:
       - "{{ found_directories.files | map(attribute='path') | list }}"
       - /permabit/build
-  when: (inventory_hostname not in groups['infrastructure'])
-          and ((pbit_build.stat.isdir is defined) and pbit_build.stat.isdir)
+  when: ((not is_infrastructure)
+          and ((pbit_build.stat.isdir is defined) and pbit_build.stat.isdir))
 
 - name: Remove /permabit/build from infrastructure machine NFS exports
   lineinfile:
     regexp: '^/permabit/build\s+'
     path: /etc/exports
     state: absent
-  when: inventory_hostname in groups['infrastructure']
+  when: is_infrastructure
   become: yes
 
 - block:
