@@ -12,6 +12,32 @@
     with_items: "{{ nfs_exports }}"
     become: yes
 
+  # Open the NFS TCP port in the firewall so machines can access our exports.
+  - name: Open NFS TCP Port
+    firewalld:
+      port: 2049/tcp
+      state: enabled
+      permanent: true
+      offline: true
+    become: yes
+
+  - block:
+    - name: Checking service status
+      service_facts:
+
+    - name: Restart firewalld
+      systemd:
+        name: "{{ service }}"
+        state: restarted
+        enabled: "{{ status == 'enabled' }}"
+      become: yes
+      vars:
+        status: ansible_facts.services[service].status
+      when: service in ansible_facts.services
+              and ansible_facts.services[service].state == "running"
+    vars:
+      service: "firewalld.service"
+
   - name: Start NFS Service
     systemd:
       name: nfs-server
