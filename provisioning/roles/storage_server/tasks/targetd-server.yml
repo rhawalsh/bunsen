@@ -45,3 +45,12 @@
   vars:
     filesys_root: /mnt/filesys_root
   become: yes
+
+# Open the necessary iscsi ports so machines can reach the service.
+- include_tasks: "{{ playbook_dir }}/library/firewall_port.yml"
+  vars:
+    port: "{{ item }}"
+    open: true
+  with_items:
+    - 3260/tcp  # iscsi itself
+    - 18700/tcp # the port used by support utilities such as export_list

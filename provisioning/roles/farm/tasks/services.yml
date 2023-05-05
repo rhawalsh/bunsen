@@ -22,6 +22,12 @@
       enabled: True
     become: yes
 
+  # Open the athinfo tcp port so machines can reach the service.
+  - include_tasks: "{{ playbook_dir }}/library/firewall_port.yml"
+    vars:
+      port: 49155/tcp
+      open: true
+
   - name: Make sure dkms is enabled
     systemd:
       name: dkms
