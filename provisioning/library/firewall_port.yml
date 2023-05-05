@@ -1,0 +1,34 @@
+---
+# Tasks for opening/closing ports in the firewall configuration and restarting
+# the firewall for the change to take effect.
+#
+# Input vars:
+#   port: <N>[-<M>]/<tcp|udp>
+#   open: true => open, false => close
+
+# Open/close the specified ports in the firewall.
+- name: Modify firewall port {{ port }}
+  firewalld:
+    port: "{{ port }}"
+    state: "{{ (open | bool) | ternary('enabled', 'disabled') }}"
+    permanent: true
+    offline: true
+  become: yes
+
+- block:
+  - name: Checking service status
+    service_facts:
+
+  - name: Restart firewalld
+    systemd:
+      name: "{{ service }}"
+      state: restarted
+      enabled: "{{ status == 'enabled' }}"
+    become: yes
+    vars:
+      status: ansible_facts.services[service].status
+    when: service in ansible_facts.services
+            and ansible_facts.services[service].state == "running"
+  vars:
+    service: "firewalld.service"
+

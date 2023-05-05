@@ -18,14 +18,23 @@
     state: started
   become: yes
 
-- name: Wait for RSVPD service to be active
-  wait_for:
-    port: 1752  # The rsvp server we deploy listens on 1752.
+- block:
+  - name: Wait for RSVPD service to be active
+    wait_for:
+      port: "{{ port_number }}"
+
+  # Open the RSVPD tcp port so machines can reach the service.
+  - include_tasks: "{{ playbook_dir }}/library/firewall_port.yml"
+    vars:
+      port: "{{ port_number ~ '/tcp' }}"
+      open: true
+  vars:
+    port_number: 1752 # The rsvp server we deploy listens on 1752.
 
 # Add the RSVP classes
 # For RHEL families we register only the major version of the distribution.
 - name: Add the RSVP classes
-  command: "/usr/bin/rsvpclient  --dhost localhost add_class {{ item }}"
+  command: "/usr/bin/rsvpclient --dhost localhost add_class {{ item }}"
   register: result
   changed_when: "result.rc == 0"
   failed_when: "(result.rc != 0) and ('already exists' not in result.stderr)"
