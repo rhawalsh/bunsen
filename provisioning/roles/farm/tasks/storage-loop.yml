@@ -75,5 +75,9 @@
 
   vars:
     mount_path: "{{ (mount == '/')
-                  | ternary(mount, ('', mount) | join('/')) }}"
-    destination_path: "{{ (mount_path, path) | join('/') }}"
+                      | ternary(mount, ('', mount) | join('/')) }}"
+    destination_path: "{{ ((mount_path == '/') | ternary('', mount_path),
+                            path) | join('/') }}"
+    loop_after: "{{ (mount | replace('/', '-')) ~ '.mount' }}"
+    loop_before: "u1.mount"
+    loop_requires: "{{ loop_after }}"

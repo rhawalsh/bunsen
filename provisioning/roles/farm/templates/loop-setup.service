@@ -1,12 +1,13 @@
 [Unit]
 Description=Activate VDO scratch loop device
-Requires={{ mount }}.mount
-Before=u1.mount
-After={{ mount }}.mount
+Requires={{ loop_requires }}
+Before={{ loop_before }}
+After={{ loop_after }}
 #Wants=...
 
 [Service]
 ExecStart=/sbin/losetup -f {{ destination_path }}
+ExecStart=udevadm trigger
 ExecStop=/sbin/losetup -D
 Type=oneshot
 RemainAfterExit=yes
