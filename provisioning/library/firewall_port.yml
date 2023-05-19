@@ -7,28 +7,29 @@
 #   open: true => open, false => close
 
 # Open/close the specified ports in the firewall.
-- name: Modify firewall port {{ port }}
-  firewalld:
-    port: "{{ port }}"
-    state: "{{ (open | bool) | ternary('enabled', 'disabled') }}"
-    permanent: true
-    offline: true
-  become: yes
-
 - block:
   - name: Checking service status
     service_facts:
 
-  - name: Restart firewalld
-    systemd:
-      name: "{{ service }}"
-      state: restarted
-      enabled: "{{ status == 'enabled' }}"
-    become: yes
-    vars:
-      status: ansible_facts.services[service].status
+  - block:
+    - name: Modify Firewall Port {{ port }}
+      firewalld:
+        port: "{{ port }}"
+        state: "{{ (open | bool) | ternary('enabled', 'disabled') }}"
+        permanent: true
+        offline: true
+      become: yes
+
+    - name: Restart firewalld
+      systemd:
+        name: "{{ service }}"
+        state: restarted
+        enabled: "{{ status == 'enabled' }}"
+      become: yes
+      vars:
+        status: ansible_facts.services[service].status
+      when: ansible_facts.services[service].state == "running"
     when: service in ansible_facts.services
-            and ansible_facts.services[service].state == "running"
   vars:
     service: "firewalld.service"
 
