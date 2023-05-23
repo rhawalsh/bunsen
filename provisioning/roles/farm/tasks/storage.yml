@@ -31,7 +31,17 @@
           test_disk: "/dev/{{aux_disk}}"
 
       vars:
-        aux_disk: "{%- if ansible_virtualization_type == 'kvm' -%}
+        # Attempt to use more modern ansible variable which provides ability to
+        # distinguish the possibilities of nested virtualization. If it's not
+        # available infer the machine is a virtualization guest if its
+        # virtualization role is not 'host'.
+        guest_tech: "{{ ansible_virtualization_tech_guest
+                        | default(
+                            (ansible_virtualization_type != 'kvm')
+                            | ternary([],
+                                      (ansible_virtualization_role == 'host')
+                                      | ternary([], ['kvm']))) }}"
+        aux_disk: "{%- if 'kvm' in guest_tech -%}
                      vdb
                    {%- else -%}
                      sdb
