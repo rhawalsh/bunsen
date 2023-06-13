@@ -1,11 +1,11 @@
 ---
 #
-existing_lvs: "{%- if ansible_lvm is defined -%}
+existing_lvs: "{%- if ((ansible_lvm is defined) and (ansible_lvm is mapping)) -%}
                  {{ ansible_lvm.lvs.keys() | list }}
                {%- else -%}
                  {{ [] }}
                {%- endif -%}"
-existing_vgs: "{%- if ansible_lvm is defined -%}
+existing_vgs: "{%- if ((ansible_lvm is defined) and (ansible_lvm is mapping)) -%}
                  {{ ansible_lvm.vgs.keys() | list }}
                {%- else -%}
                  {{ [] }}

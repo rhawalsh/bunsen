@@ -71,7 +71,7 @@
             scratch_vg: "{{ ansible_lvm.lvs['root'].vg }}"
             test_disk: ""
       when: (scratch_vg is not defined)
-              and (ansible_lvm is defined)
+              and ((ansible_lvm is defined) and (ansible_lvm is mapping))
               and ('root' in ansible_lvm.lvs.keys())
 
     - block:
@@ -238,7 +238,8 @@
     vdo_scratch_max_gb: 150
     existing_lvs: "
       {%- set tmp = {} -%}
-      {%- set lvs = (ansible_lvm is defined) | ternary(ansible_lvm.lvs, {}) -%}
+      {%- set lvs = ((ansible_lvm is defined) and (ansible_lvm is mapping))
+                    | ternary(ansible_lvm.lvs, {}) -%}
       {%- for lv in lvs -%}
         {%- set x = tmp.update({ lvs[lv].vg+'/'+lv : 1 }) -%}
       {%- endfor -%}
