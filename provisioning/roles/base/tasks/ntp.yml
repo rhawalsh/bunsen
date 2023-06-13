@@ -57,6 +57,6 @@
   #
   # XXX Otherwise, we're ignoring running services.
   when: (allow_environmental_ntp  | bool)
-        and (not (is_rhel8_family | bool))
+        and (not (is_rhel8_or_later_family | bool))
         and (ansible_virtualization_role != 'guest')
         and (system_has_ntpd | bool)

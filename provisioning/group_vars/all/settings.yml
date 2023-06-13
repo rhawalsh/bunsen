@@ -61,7 +61,7 @@ is_centos: '{{target_distribution_name == "CentOS"}}'
 is_centos7: '{{is_centos and ((target_distribution_major_number | int) == 7)}}'
 is_centos8: '{{is_centos and ((target_distribution_major_number | int) == 8)}}'
 is_centos80: '{{is_centos8 and ((target_distribution_minor_number | int) == 0)}}'
-is_centos8_or_later: '{{is_rhel and ((target_distribution_major_number | int) >= 8)}}'
+is_centos8_or_later: '{{is_centos and ((target_distribution_major_number | int) >= 8)}}'
 
 is_rhel_family: '{{is_centos or is_rhel}}'
 is_rhel7_family: '{{is_rhel_family and ((target_distribution_major_number | int) == 7)}}'
