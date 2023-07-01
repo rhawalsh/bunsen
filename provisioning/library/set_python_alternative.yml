@@ -9,6 +9,7 @@
     name: python
     path: /usr/bin/{{ item }}
     priority: 1000
+  become: yes
   # The one-item loop here is just so that the logged message will show the
   # chosen alternative for each host.
   with_items:
@@ -21,4 +22,5 @@
     src: /etc/alternatives/python
     dest: /usr/bin/python
     state: link
+  become: yes
   when: is_rhel8_family | bool
