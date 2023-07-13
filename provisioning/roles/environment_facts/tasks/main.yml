@@ -26,6 +26,11 @@
     set_fact:
       ansible_controller_ip: "{{ hostvars['localhost']['ansible_default_ipv4']['address'] }}"
 
+  - name: Include ansible controller as an NTP server
+    set_fact:
+      common_ntp_servers: '{{ (common_ntp_servers + [ansible_controller_ip]) | unique }}'
+    when: (extra_user_ntp_servers | length) == 0
+
   - name: Setting default alternative package facts
     # If the machine is being used as the storage server it needs to use
     # python3 as its default python as the storage software used for iSCSI
