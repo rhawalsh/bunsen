@@ -79,8 +79,6 @@ distribution_repo_root_url: "
   {%- endif -%}
   {{ root_url }}"
 
-common_ntp_servers: []
-
 # Machine type groups.
 # Farms, pfarms and performance farms.
 farms: "{{ groups['farms'] | default([]) }}"
@@ -174,6 +172,12 @@ user_accounts: "
     {%- set local_uid.value = local_uid.value + 1 -%}
   {%- endfor -%}
   {{ tmp }}"
+
+# User ntp servers to use.
+extra_user_ntp_servers: "{{ (user_ntp_servers | default([])) | unique }}"
+
+# The total set of ntp servers.
+common_ntp_servers: "{{ [] + extra_user_ntp_servers }}"
 
 # User nfs mounts to mount.
 extra_user_nfs_mounts: "{{ user_nfs_mounts | default({}) }}"
